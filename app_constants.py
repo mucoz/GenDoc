@@ -1,0 +1,11 @@
+
+
+
+class AppConstants:
+    CONFIG_FILE_NAME = "Config.ini"
+    SPLASH_WINDOW_TITLE = "Loading GenDoc"
+    SPLASH_WINDOW_WIDTH = 500
+    SPLASH_WINDOW_HEIGHT = 400
+    MAIN_WINDOW_TITLE = "GenDoc"
+    MAIN_WINDOW_WIDTH = 700
+    MAIN_WINDOW_HEIGHT = 600
