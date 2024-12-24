@@ -5,8 +5,6 @@ from window_splash import SplashWindow
 from listener_keyboard import KeyboardListener
 from listener_mouse import MouseListener
 from app_state import AppState
-from kthread import KThread
-from time import sleep
 
 
 class Application:
@@ -19,11 +17,13 @@ class Application:
         self.keyboard_listener = KeyboardListener()
         log.info("Initializing mouse listener...")
         self.mouse_listener = MouseListener()
-        log.info("Opening Splash screen...")
-        # splash_screen = SplashWindow(self.config_parser, on_load_complete_callback=self.run)
-        # splash_screen.display()
 
     def run(self):
+        log.info("Opening Splash screen...")
+        splash_screen = SplashWindow(self.config_parser, on_load_complete_callback=self.show_main_window)
+        splash_screen.display()
+
+    def show_main_window(self):
         if not AppState.splash_screen_cancelled:
             log.info("Opening Main window...")
             main_window = MainWindow(self.config_parser,

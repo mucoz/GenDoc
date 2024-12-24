@@ -1,5 +1,6 @@
 import time
 import tkinter as tk
+import tkinter.ttk as ttk
 # import ttkbootstrap as ttk
 # from ttkbootstrap.constants import *
 from PIL import Image, ImageTk
@@ -20,7 +21,6 @@ class SplashWindow:
                           self.config_parser.read("CONSTANTS", "VERSION")
                           )
         self.adjust_window(AppConstants.SPLASH_WINDOW_WIDTH, AppConstants.SPLASH_WINDOW_HEIGHT)
-        self.is_cancelled = False  # Track cancellation state
         self.data_loading_thread = None
         self.create_elements()
         self.drag_start_x = None
@@ -38,20 +38,24 @@ class SplashWindow:
         self.data_loading_thread = KThread(target=self.load_data, daemon=True)
         self.data_loading_thread.start()
 
-    # def init_load_data(self):
-    #     self.data_thread = KThread(target=self.load_data)
-    #     self.data_thread.start()
-
     def load_data(self):
         try:
             log.info("Starting data loading...")
-            time.sleep(5)  # Simulate a long operation
 
-            if not self.is_cancelled:
+            for i in range(5):
+                print(f"Dataset {i + 1} loading...")
+                self.label_info["text"] = f"Dataset {i + 1} loading..."
+                self.label_info["width"] = 10 * (i + 1)
+                time.sleep(1)
+
+            if not AppState.splash_screen_cancelled:
                 log.info("Data loaded successfully.")
                 self.window.after(0, self.on_load_complete)  # Notify main thread
         except Exception as e:
             log.error(f"Error loading data: {e}")
+
+    # def update_progress(self, value):
+    #     self.progressbar['value'] = value
 
     def on_load_complete(self):
         # Close the splash screen and trigger the main window
@@ -61,7 +65,6 @@ class SplashWindow:
 
     def cancel_splash_screen(self):
         log.info("Splash screen canceled by user.")
-        self.is_cancelled = True
         AppState.splash_screen_cancelled = True
         self._on_closing()
         exit(0)  # Exit the application
@@ -85,15 +88,16 @@ class SplashWindow:
         self.original_image = Image.open(self.bg_image_path)
         self._update_image(self.window.winfo_width(), self.window.winfo_height())
         # button for closing the window
-        # Create a label styled as "X"
-        label_close = tk.Label(self.window, text=" X ", font=("Arial", 12),
-                               fg="white", bg="red", cursor="hand2")
-        label_close.place(relx=0.98, rely=0.02, anchor="ne")  # Top-right corner
-        # Bind the click event to close the window
-        label_close.bind("<Button-1>", lambda e: self.cancel_splash_screen)
-        # Optional: Add hover effects
-        label_close.bind("<Enter>", lambda e: label_close.config(bg="darkred"))
-        label_close.bind("<Leave>", lambda e: label_close.config(bg="red"))
+        button_close = tk.Button(self.window, text=' X ', font=("Arial", 12), command=self.cancel_splash_screen, fg='white', bg='red', cursor='hand2')
+        button_close.place(relx=0.98, rely=0.02, anchor='ne')
+
+        # self.label_header = tk.Label(self.window, text="Generate Documents", font=("Arial", 24))
+        # self.label_header.place(relx=0.8, rely=0.4, anchor="ne")
+
+        self.label_info = tk.Label(self.window, text="Loading...", font=("Arial", 12, "bold"), fg="white", bg="green")
+        self.label_info.pack(side=tk.LEFT, padx=1, pady=1, expand=True)
+        # self.progressbar = ttk.Progressbar(self.window, orient='horizontal', length=180, mode='determinate')
+        # self.progressbar.pack(side=tk.LEFT, padx=1, pady=1, expand=True)
 
     def _update_image(self, width, height):
         # Resize the image to fit the current window size

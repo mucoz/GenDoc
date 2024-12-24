@@ -124,7 +124,7 @@ class MainWindow:
         # label for Directory
         self.label_directory = ttk.Label(self.frame_directory, text='Directory:')
         # self.label_directory.grid(row=0, column=0, sticky="we", padx=15, pady=10)
-        self.label_directory.pack(side=LEFT, padx=15, pady=15)
+        self.label_directory.pack(side=LEFT, padx=5, pady=15)
         # Entry widget for directory path
         self.entry_directory = ttk.Entry(self.frame_directory, font=("Arial", 12), width=35)
         self.entry_directory.pack(side=LEFT, padx=15, pady=15, expand=True, fill=X)
@@ -132,7 +132,7 @@ class MainWindow:
         self.icon_folder = tk.PhotoImage(file='assets/img/folder.png')
         self.button_choose_folder = ttk.Button(
             self.frame_directory,
-            text=" ...",
+            text=" Select",
             image=self.icon_folder,
             compound='left',
             # style="Small.TButton",
